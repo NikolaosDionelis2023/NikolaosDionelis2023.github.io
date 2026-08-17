@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikolaos Dionelis — Principal Research Scientist · AI Foundation Models for the Sun, Moon &amp; Earth</title>
+<meta name="description" content="Nikolaos Dionelis, PhD — Principal Research Scientist III at UAH / NASA Marshall Space Flight Center (ODSI). Uniting classical signal processing with modern generative AI to build science foundation models for the Sun, the Moon, and the Earth.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0D1C;
+  --panel:#10152E;
+  --panel-2:#0D1226;
+  --ink:#EAECF5;
+  --muted:#98A1BC;
+  --line:rgba(160,175,220,.16);
+  --sun:#F2A93B;
+  --earth:#3FB7C6;
+  --moon:#C7CEDF;
+  --violet:#8A7FD6;
+  --maxw:1120px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(242,169,59,.35)}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* ---------- Nav ---------- */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,13,28,.82);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:var(--maxw);margin:0 auto;padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.brand{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.14em;color:var(--muted)}
+.brand b{color:var(--ink);font-weight:500}
+.nav-links{display:flex;gap:22px;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+  font-family:'IBM Plex Mono',monospace;font-size:.74rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap;
+  padding:4px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;
+}
+.nav-links a:hover{color:var(--ink);border-color:var(--sun)}
+
+/* ---------- Hero ---------- */
+header.hero{padding:84px 0 72px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:.74rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:22px;
+}
+.eyebrow .dot{color:var(--sun)}
+h1{
+  font-family:'Spectral',serif;font-weight:500;
+  font-size:clamp(2.3rem,4.6vw,3.7rem);
+  line-height:1.14;letter-spacing:-.01em;margin-bottom:24px;
+}
+h1 em{font-style:italic;font-weight:500}
+h1 .sun{color:var(--sun)}
+h1 .moon{color:var(--moon)}
+h1 .earth{color:var(--earth)}
+.hero-name{
+  font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink);margin-bottom:14px;
+}
+.hero-name span{color:var(--muted)}
+.hero p.lede{color:var(--muted);max-width:56ch;margin-bottom:32px}
+.hero p.lede b{color:var(--ink);font-weight:500}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px}
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 18px;border:1px solid var(--line);border-radius:6px;color:var(--ink);
+  transition:border-color .2s,background .2s,transform .15s;
+}
+.btn:hover{border-color:var(--sun);background:rgba(242,169,59,.07);transform:translateY(-1px)}
+.btn.primary{border-color:var(--sun);background:rgba(242,169,59,.12)}
+
+/* signature: live DWT panel */
+.dwt-panel{
+  border:1px solid var(--line);border-radius:12px;background:var(--panel-2);
+  padding:18px 18px 12px;box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.dwt-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px;
+}
+.dwt-head .live{color:var(--sun)}
+#dwt{width:100%;height:340px;display:block;border-radius:6px}
+.dwt-cap{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);
+  margin-top:10px;letter-spacing:.06em;
+}
+.dwt-cap span{color:var(--ink)}
+
+/* ---------- Sections ---------- */
+section{padding:80px 0;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:40px}
+.sec-num{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--sun);letter-spacing:.1em}
+h2{font-family:'Spectral',serif;font-weight:500;font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.01em}
+.sec-sub{color:var(--muted);max-width:70ch;margin:-24px 0 40px 0}
+
+/* News */
+.news-list{display:flex;flex-direction:column;gap:0}
+.news-item{
+  display:grid;grid-template-columns:130px 1fr;gap:24px;
+  padding:16px 0;border-bottom:1px dashed var(--line);
+}
+.news-item:last-child{border-bottom:none}
+.news-date{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--sun);letter-spacing:.08em;padding-top:3px}
+.news-item p{color:var(--muted)}
+.news-item p b{color:var(--ink);font-weight:500}
+.news-item a{color:var(--earth);border-bottom:1px solid transparent}
+.news-item a:hover{border-color:var(--earth)}
+
+/* About */
+.about-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:start}
+.about-grid p{color:var(--muted);margin-bottom:18px}
+.about-grid p b{color:var(--ink);font-weight:500}
+.about-grid a{color:var(--earth)}
+.about-grid a:hover{text-decoration:underline}
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+.stat{
+  border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--panel-2);
+}
+.stat .n{font-family:'Spectral',serif;font-size:1.5rem;color:var(--ink)}
+.stat .l{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.edu-card{border:1px solid var(--line);border-radius:12px;background:var(--panel-2);padding:22px}
+.edu-card h3{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;
+}
+.edu-item{padding:12px 0;border-bottom:1px dashed var(--line)}
+.edu-item:last-child{border-bottom:none}
+.edu-item .deg{color:var(--ink);font-weight:500;font-size:.95rem}
+.edu-item .inst{color:var(--muted);font-size:.86rem}
+.edu-item .yr{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--sun)}
+
+/* Research */
+.domain-card{
+  border:1px solid var(--line);border-radius:12px;background:var(--panel-2);
+  padding:30px;margin-bottom:20px;position:relative;overflow:hidden;
+  transition:border-color .25s, transform .25s;
+}
+.domain-card:hover{transform:translateY(-2px)}
+.domain-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc,var(--sun));
+}
+.domain-card.sun{--acc:var(--sun)} .domain-card.sun:hover{border-color:rgba(242,169,59,.5)}
+.domain-card.moon{--acc:var(--moon)} .domain-card.moon:hover{border-color:rgba(199,206,223,.5)}
+.domain-card.earth{--acc:var(--earth)} .domain-card.earth:hover{border-color:rgba(63,183,198,.5)}
+.domain-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--acc,var(--sun));margin-bottom:12px;
+}
+.domain-card h3{font-family:'Spectral',serif;font-weight:500;font-size:1.45rem;margin-bottom:12px}
+.domain-card p{color:var(--muted);max-width:78ch;margin-bottom:14px}
+.domain-card p b{color:var(--ink);font-weight:500}
+.domain-card a{color:var(--acc,var(--sun));border-bottom:1px solid transparent}
+.domain-card a:hover{border-color:var(--acc,var(--sun))}
+.fact-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.fact{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.05em;
+  border:1px solid var(--line);border-radius:100px;padding:5px 12px;color:var(--muted);
+}
+.method-strip{
+  margin-top:34px;border:1px dashed var(--line);border-radius:12px;padding:22px 24px;
+}
+.method-strip h4{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  padding:6px 12px;color:var(--ink);
+}
+
+/* Experience */
+.xp{border-left:1px solid var(--line);margin-left:6px;padding-left:34px;position:relative}
+.xp-item{position:relative;padding-bottom:44px}
+.xp-item:last-child{padding-bottom:0}
+.xp-item::before{
+  content:"";position:absolute;left:-39px;top:7px;width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--sun);
+}
+.xp-item.esa::before{border-color:var(--earth)}
+.xp-item.ed::before{border-color:var(--moon)}
+.xp-item.ic::before{border-color:var(--violet)}
+.xp-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.1em;color:var(--sun);text-transform:uppercase}
+.xp-item.esa .xp-date{color:var(--earth)}
+.xp-item.ed .xp-date{color:var(--moon)}
+.xp-item.ic .xp-date{color:var(--violet)}
+.xp-item h3{font-family:'Spectral',serif;font-weight:500;font-size:1.3rem;margin:6px 0 2px}
+.xp-org{color:var(--muted);font-size:.92rem;margin-bottom:12px}
+.xp-item p{color:var(--muted);max-width:80ch;margin-bottom:8px}
+.xp-item p b{color:var(--ink);font-weight:500}
+
+/* Publications */
+.metric-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:38px}
+.metric{
+  border:1px solid var(--line);border-radius:8px;background:var(--panel-2);
+  padding:12px 20px;
+}
+.metric .n{font-family:'Spectral',serif;font-size:1.35rem}
+.metric .l{font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pub-group{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--sun);margin:34px 0 10px;
+}
+.pub{
+  display:grid;grid-template-columns:64px 1fr;gap:20px;
+  padding:15px 0;border-bottom:1px dashed var(--line);
+}
+.pub-yr{font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--muted);padding-top:3px}
+.pub-t{color:var(--ink);font-weight:500}
+.pub-t a{border-bottom:1px solid transparent;transition:border-color .2s}
+.pub-t a:hover{border-color:var(--earth);color:var(--earth)}
+.pub-v{color:var(--muted);font-size:.9rem;margin-top:2px}
+.pub-v .badge{
+  font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid rgba(242,169,59,.45);color:var(--sun);border-radius:100px;padding:2px 9px;margin-left:8px;
+}
+.pub-more{margin-top:26px;color:var(--muted)}
+.pub-more a{color:var(--earth)}
+.pub-more a:hover{text-decoration:underline}
+
+/* Recognition */
+.rec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.rec{
+  border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:22px;
+}
+.rec .yr{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--sun);letter-spacing:.12em}
+.rec h3{font-family:'Spectral',serif;font-weight:500;font-size:1.15rem;margin:8px 0 6px}
+.rec p{color:var(--muted);font-size:.92rem}
+
+/* Contact */
+.contact-mail{
+  font-family:'Spectral',serif;font-size:clamp(1.4rem,3.2vw,2.2rem);
+  color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:4px;transition:border-color .2s,color .2s;
+}
+.contact-mail:hover{color:var(--sun);border-color:var(--sun)}
+.contact-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+#contact p{color:var(--muted);max-width:62ch;margin-bottom:28px}
+
+footer{padding:36px 0 48px;color:var(--muted)}
+.foot-inner{
+  max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.1em;
+}
+footer a{color:var(--muted)} footer a:hover{color:var(--ink)}
+
+/* Reveal on scroll */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .domain-card,.btn{transition:none}
+}
+
+@media (max-width: 900px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .about-grid{grid-template-columns:1fr}
+  .rec-grid{grid-template-columns:1fr}
+  header.hero{padding:56px 0 56px}
+  section{padding:60px 0}
+  .news-item{grid-template-columns:1fr;gap:2px}
+  #dwt{height:280px}
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <div class="brand"><b>N. DIONELIS</b> · PHD</div>
+    <div class="nav-links">
+      <a href="#news">News</a>
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#experience">Experience</a>
+      <a href="#publications">Publications</a>
+      <a href="#recognition">Recognition</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Signal Processing <span class="dot">×</span> Generative AI <span class="dot">·</span> NASA MSFC <span class="dot">·</span> Huntsville, AL</div>
+      <div class="hero-name">Nikolaos Dionelis <span>· Principal Research Scientist III</span></div>
+      <h1>Foundation models for <em class="sun">the&nbsp;Sun</em>, <em class="moon">the&nbsp;Moon</em>, and <em class="earth">the&nbsp;Earth</em>.</h1>
+      <p class="lede">I unite classical signal processing — wavelets, Fourier analysis, multi-scale hierarchy — with modern generative AI to build <b>science foundation models that preserve the fine spectral detail discovery depends on</b>. At the University of Alabama in Huntsville, embedded at NASA Marshall Space Flight Center (ODSI), I develop and run large-scale multi-modal models for heliophysics, lunar science, and Earth observation, in direct support of the Artemis program and space-weather resilience.</p>
+      <div class="btn-row">
+        <a class="btn primary" href="mailto:nikolaos.dionelis@uah.edu">Email</a>
+        <a class="btn" href="https://scholar.google.com/citations?hl=en&amp;user=2UweGHoAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener">Google Scholar</a>
+        <a class="btn" href="https://www.linkedin.com/in/nikolaos-dionelis-60688279" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://orcid.org/0000-0001-9662-8537" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+    <div class="dwt-panel" aria-hidden="true">
+      <div class="dwt-head"><span>Haar DWT · 3 levels</span><span class="live">● live</span></div>
+      <canvas id="dwt"></canvas>
+      <div class="dwt-cap">x[n] → { d₁, d₂, d₃, a₃ } · <span>the multirate filterbank behind my spectral tokenizers</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="news">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">01</span><h2>News</h2></div>
+    <div class="news-list reveal">
+      <div class="news-item">
+        <div class="news-date">Aug 2026</div>
+        <p><b>First-author paper submitted to WACV 2027</b> (Algorithms Track): “What Actually Helps in Remote Sensing? A Study of Tokenization, Hierarchy, Frequency, and Diffusion Across Lunar, Heliophysics, and Earth Domains” — a matched-compute study of spatial and spectral-wavelet tokenizers.</p>
+      </div>
+      <div class="news-item">
+        <div class="news-date">Jul 2026</div>
+        <p><b>Promoted to Principal Research Scientist III</b> at UAH / NASA MSFC — within ten months of appointment.</p>
+      </div>
+      <div class="news-item">
+        <div class="news-date">2026</div>
+        <p>Co-authored <b>“Beyond 3 Million Tokens: A Multi-Modal Foundation Model for Full-Resolution Heliophysics”</b> — submitted to NeurIPS 2026 (under review).</p>
+      </div>
+      <div class="news-item">
+        <div class="news-date">Oct 2025</div>
+        <p><b>Joined NASA MSFC’s Office of Data Science and Informatics</b> (IMPACT AI for Science team) via UAH, moving from the European Space Agency’s Φ-lab.</p>
+      </div>
+      <div class="news-item">
+        <div class="news-date">2025</div>
+        <p><b><a href="https://arxiv.org/abs/2504.11171" target="_blank" rel="noopener">TerraMind</a> published at ICCV 2025</b> — large-scale generative multimodality for Earth observation (with IBM Research and ESA); plus <a href="https://arxiv.org/abs/2502.13734" target="_blank" rel="noopener">CARE</a> at IJCNN 2025 and a confidence-assessment paper in IEEE GRSL.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">02</span><h2>About</h2></div>
+    <div class="about-grid">
+      <div class="reveal">
+        <p>I am <b>Nikolaos Dionelis, PhD</b>, a Principal Research Scientist III at the <b>University of Alabama in Huntsville (UAH)</b>, working at <b>NASA Marshall Space Flight Center</b> in the <a href="https://www.nasa.gov/marshall/marshall-space-flight-missions/office-of-data-science-and-informatics-odsi/" target="_blank" rel="noopener">Office of Data Science and Informatics (ODSI)</a>, within the IMPACT AI for Science team. I devise, implement, and run large-scale multi-modal <b>AI foundation models for science</b>, implementing NASA SMD’s AI-for-Science strategy of five science foundation models supported by the INDUS large language model, released openly on Hugging Face.</p>
+        <p>My methodological signature comes from a decade in signal processing: I bring <b>wavelets (DWT, DT-CWT), frequency-domain analysis, and multi-scale hierarchy</b> into discrete image tokenization (FSQ/VQ), JEPA world models, diffusion and flow matching, and 4M-style multi-modal pretraining — so that foundation models keep the high-frequency content of scientific imagery instead of smoothing it away. I run this work end-to-end on NASA high-performance computing: multi-node, multi-GPU A100 pretraining, ablation, and evaluation at scale.</p>
+        <p>Before Huntsville, I was an Internal Research Fellow at the <b>European Space Agency’s Φ-lab</b> (ESRIN, Italy), a four-year postdoctoral Research Associate in machine learning at the <b>University of Edinburgh / UDRC</b>, and earned my <b>PhD at Imperial College London</b> on modulation-domain Kalman filtering for speech enhancement, supported by an EPSRC Doctoral Training Award.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="n">35+</div><div class="l">Papers &amp; reports</div></div>
+          <div class="stat"><div class="n">354</div><div class="l">Citations · h-index 10</div></div>
+          <div class="stat"><div class="n">4</div><div class="l">Institutions: NASA · ESA · Edinburgh · Imperial</div></div>
+          <div class="stat"><div class="n">650k</div><div class="l">NAIRR GPU-hours (team award, ~$5M)</div></div>
+        </div>
+      </div>
+      <div class="edu-card reveal">
+        <h3>Education</h3>
+        <div class="edu-item">
+          <div class="yr">2015 – 2019</div>
+          <div class="deg">PhD, Signal Processing</div>
+          <div class="inst">Imperial College London · EPSRC Doctoral Training Award · supervised by Dr Mike Brookes &amp; Prof. Patrick Naylor · MIT–Imperial Global Fellows</div>
+        </div>
+        <div class="edu-item">
+          <div class="yr">2011 – 2015</div>
+          <div class="deg">MEng, Electrical &amp; Electronic Engineering</div>
+          <div class="inst">Imperial College London · First Class Honours (1st, 72.8%) · ML for Computer Vision 84%, DSP 85%</div>
+        </div>
+        <div class="edu-item">
+          <div class="yr">2009 – 2011</div>
+          <div class="deg">International Baccalaureate · 40/45</div>
+          <div class="inst">HAEF Athens College, Greece</div>
+        </div>
+        <div class="edu-item">
+          <div class="yr">Service</div>
+          <div class="deg">Reviewer &amp; committees</div>
+          <div class="inst">IEEE/ACM TASLP (15+ reviews), ICLR, ICPR, SSPD, IGARSS, EGU · best-paper committees: EarthVision 2024, HADR 2023, CCAI 2023, MACLEAN 2023 · UKRI &amp; ESA proposal evaluation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">03</span><h2>Research</h2></div>
+    <p class="sec-sub reveal">Three celestial domains, one method: keep the physics in the pixels. Frequency-aware tokenization and generative pretraining for scientific imagery, from the solar corona to the lunar surface to Earth’s land cover.</p>
+
+    <div class="domain-card sun reveal">
+      <div class="domain-tag">☉ Sun · Heliophysics Foundation Model</div>
+      <h3>Forecasting the Sun days ahead</h3>
+      <p>Core methods and model runs for the <b>Heliophysics Multi-Modal FM</b>, extending the NASA–IBM <a href="https://arxiv.org/abs/2508.14112" target="_blank" rel="noopener">Surya</a> lineage — pre-trained on nine years of Solar Dynamics Observatory data (AIA 8 channels + HMI 5 channels). Downstream: forecasting strong solar flares (class X) and coronal mass ejections <b>days in advance</b>, protecting crewed spaceflight, satellites, power grids, and aviation; segmentation of coronal holes, solar wind, and coronal loops. Co-author of <b>“Beyond 3 Million Tokens”</b>, submitted to NeurIPS 2026.</p>
+      <div class="fact-row">
+        <span class="fact">SDO AIA + HMI · 13 channels</span>
+        <span class="fact">NSF NAIRR · 650,000 GPU-hours</span>
+        <span class="fact">NeurIPS 2026 · under review</span>
+      </div>
+    </div>
+
+    <div class="domain-card moon reveal">
+      <div class="domain-tag">☾ Moon · Lunar Foundation Model</div>
+      <h3>Tokenizers that respect lunar terrain</h3>
+      <p>First-author lead on tokenization for the <b>Lunar FM</b> (LRO WAC &amp; NAC imagery + DTM elevation/slope/aspect). Devised novel <b>DWT- and DT-CWT-based spectral wavelet tokenizers</b> and a dual-codebook FSQ tokenizer (morphology / amplitude streams, wavelet-packet decomposition, SpectFormer backbone); integrated them as frozen tokenizers into 4M/TerraMind-style multi-modal pretraining, achieving <b>~24% validation-loss reduction</b> versus the spatial baseline at matched compute. Downstream: crater detection and age estimation, <b>Artemis landing-site identification</b>, and cave, pit, volcano, and boulder detection on the Moon and Mars.</p>
+      <div class="fact-row">
+        <span class="fact">LRO WAC · NAC · DTM</span>
+        <span class="fact">WACV 2027 · first author · under review</span>
+        <span class="fact">bidirectional WAC VIS ↔ DTM generation</span>
+      </div>
+    </div>
+
+    <div class="domain-card earth reveal">
+      <div class="domain-tag">⊕ Earth · Observation Foundation Models</div>
+      <h3>Generative multimodality for Earth observation</h3>
+      <p>Co-author of <b><a href="https://arxiv.org/abs/2504.11171" target="_blank" rel="noopener">TerraMind</a></b> (ICCV 2025), large-scale generative multimodality for EO with IBM Research. At ESA Φ-lab I led the design and benchmarking of the <b><a href="https://arxiv.org/abs/2401.04464" target="_blank" rel="noopener">PhilEO Bench</a></b>, devised the <b>CARE</b> confidence-aware regression model (IJCNN 2025), and scaled PhilEO pretraining to the MajorTOM dataset (first-author scaling-laws study). At NASA, I build HLS data pipelines aligned with the <b>Prithvi</b> geospatial FM family — the first AI geospatial foundation model demonstrated in orbit — for flood mapping, fire-scar identification, and crop classification.</p>
+      <div class="fact-row">
+        <span class="fact">Sentinel-1 / Sentinel-2 · HLS · MajorTOM</span>
+        <span class="fact">TerraMind · ICCV 2025 · 86 citations</span>
+        <span class="fact">disaster response · Artemis-era EO</span>
+      </div>
+    </div>
+
+    <div class="method-strip reveal">
+      <h4>Methods I devise, implement &amp; run at scale</h4>
+      <div class="chips">
+        <span class="chip">DWT / DT-CWT spectral tokenization</span>
+        <span class="chip">FSQ / VQ discrete latents</span>
+        <span class="chip">dual-codebook design</span>
+        <span class="chip">JEPA world models</span>
+        <span class="chip">latent &amp; conditional diffusion</span>
+        <span class="chip">flow matching</span>
+        <span class="chip">FAR / MAR autoregression</span>
+        <span class="chip">SIREN implicit fields</span>
+        <span class="chip">Random Fourier Projection</span>
+        <span class="chip">4M multi-modal pretraining</span>
+        <span class="chip">multi-node A100 · torchrun · NCCL</span>
+        <span class="chip">bf16-safe quantization</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">04</span><h2>Experience</h2></div>
+    <div class="xp">
+      <div class="xp-item reveal">
+        <div class="xp-date">Oct 2025 — Present</div>
+        <h3>Principal Research Scientist III</h3>
+        <div class="xp-org">University of Alabama in Huntsville · NASA Marshall Space Flight Center, ODSI · Huntsville, AL</div>
+        <p>Promoted from Research Scientist VI in July 2026. I develop core methods and run models for the <b>Heliophysics</b> and <b>Lunar</b> foundation models, with Earth (HLS/Prithvi) pipelines alongside. Research engineering at scale: distributed multi-node A100 training, NCCL fault diagnosis, numerically robust bf16-safe FSQ quantizers, novel wavelet-domain evaluation metrics, and large experiment sweeps with Weights &amp; Biases. Cross-organization collaboration with NASA, USRA, IBM, and NVIDIA.</p>
+      </div>
+      <div class="xp-item esa reveal">
+        <div class="xp-date">Apr 2023 — Oct 2025</div>
+        <h3>Internal Research Fellow</h3>
+        <div class="xp-org">European Space Agency · Φ-lab, ESRIN · Frascati, Italy</div>
+        <p>AI for Earth observation and EO foundation models: <b>led PhilEO Bench</b>; co-authored <b>TerraMind</b> (ICCV 2025); devised <b>CARE</b> (IJCNN 2025); scaled PhilEO pretraining to MajorTOM. Uncertainty quantification, domain adaptation, anomaly/OoD detection, ice-sheet reconstruction with implicit neural representations. Technical reviewer for ESA Φ-lab tenders and InCubed projects; supervised trainees and MSc/PhD students.</p>
+      </div>
+      <div class="xp-item ed reveal">
+        <div class="xp-date">Mar 2019 — Mar 2023</div>
+        <h3>Postdoctoral Research Associate, Machine Learning</h3>
+        <div class="xp-org">University of Edinburgh · UDRC in Signal Processing · UK</div>
+        <p>Robust generative models (GANs, VAEs, diffusion) for anomaly and out-of-distribution detection; devised <b>BDSG, TailGAN, OMASGAN</b> and few-shot open-world recognition methods (<b>FROB, CTR, SLX</b>). Knowledge exchange with the UK defence-industry consortium: Thales, Leonardo, Dstl, MBDA, BAE Systems.</p>
+      </div>
+      <div class="xp-item ic reveal">
+        <div class="xp-date">Oct 2015 — Sep 2019</div>
+        <h3>PhD Researcher &amp; Graduate Teaching Assistant</h3>
+        <div class="xp-org">Imperial College London · Communications &amp; Signal Processing Group · UK</div>
+        <p>Thesis: <b>modulation-domain Kalman filtering</b> for single-channel speech enhancement, dereverberation, and denoising — two IEEE/ACM TASLP journal papers. EPSRC Doctoral Training Award; MIT–Imperial Global Fellows Programme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">05</span><h2>Publications</h2></div>
+    <div class="metric-row reveal">
+      <div class="metric"><span class="n">354</span> <span class="l">citations</span></div>
+      <div class="metric"><span class="n">10</span> <span class="l">h-index</span></div>
+      <div class="metric"><span class="n">11</span> <span class="l">i10-index</span></div>
+      <div class="metric"><span class="n">ICCV · NeurIPS* · WACV* · IJCNN · ECML PKDD · ICPR · IGARSS · ICIP · TASLP</span> <span class="l">venues (*under review)</span></div>
+    </div>
+
+    <div class="pub-group reveal">Under review · 2026</div>
+    <div class="pub reveal">
+      <div class="pub-yr">2026</div>
+      <div>
+        <div class="pub-t"><b>N. Dionelis</b> et al. — What Actually Helps in Remote Sensing? A Study of Tokenization, Hierarchy, Frequency, and Diffusion Across Lunar, Heliophysics, and Earth Domains</div>
+        <div class="pub-v">Submitted to WACV 2027, Algorithms Track <span class="badge">first author</span><span class="badge">under review</span></div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2026</div>
+      <div>
+        <div class="pub-t">S. Roy, J. Schmude, A. Akbari Asanjan, T. Kurth, …, <b>N. Dionelis</b>, et al. — Beyond 3 Million Tokens: A Multi-Modal Foundation Model for Full-Resolution Heliophysics</div>
+        <div class="pub-v">Submitted to NeurIPS 2026 <span class="badge">under review</span></div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2026</div>
+      <div>
+        <div class="pub-t"><a href="https://doi.org/10.1111/cgf.70376" target="_blank" rel="noopener">HeatMat: Simulation of City Material Impact on Urban Heat Island Effect</a></div>
+        <div class="pub-v">M. Reinbigler, R. Rouffet, P. Naylor, M. Czerkawski, <b>N. Dionelis</b>, et al. · Computer Graphics Forum, vol. 45, no. 2</div>
+      </div>
+    </div>
+
+    <div class="pub-group reveal">Selected</div>
+    <div class="pub reveal">
+      <div class="pub-yr">2025</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2504.11171" target="_blank" rel="noopener">TerraMind: Large-Scale Generative Multimodality for Earth Observation</a></div>
+        <div class="pub-v">J. Jakubik, F. Yang, …, <b>N. Dionelis</b>, et al. · ICCV 2025 · 86 citations</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2025</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2502.13734" target="_blank" rel="noopener">CARE: Confidence-Aware Regression Estimation of Building Density Fine-Tuning EO Foundation Models</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, J. Bosmans, N. Longépé · IJCNN 2025</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2025</div>
+      <div>
+        <div class="pub-t"><a href="https://doi.org/10.1109/LGRS.2024.3504293" target="_blank" rel="noopener">Fine-Tuning Foundation Models With Confidence Assessment for Enhanced Semantic Segmentation</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, N. Longépé · IEEE Geoscience and Remote Sensing Letters, vol. 22</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2025</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2506.14765" target="_blank" rel="noopener">Scaling Laws for Geospatial Foundation Models: A Case Study on PhilEO Bench</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, R. Musto, J. Bosmans, et al. · scaling PhilEO pretraining to MajorTOM</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2024</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2401.04464" target="_blank" rel="noopener">PhilEO Bench: Evaluating Geo-Spatial Foundation Models</a></div>
+        <div class="pub-v">C. Fibaek, L. Camilleri, A. Luyts, <b>N. Dionelis</b>, B. Le Saux · IGARSS 2024 · 42 citations</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2024</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2406.18295" target="_blank" rel="noopener">Evaluating and Benchmarking Foundation Models for Earth Observation and Geospatial AI</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, C. Fibaek, et al. · ECCV FOCUS Workshop, Milan</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2024</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2404.11299" target="_blank" rel="noopener">Learning from Unlabelled Data with Transformers: Domain Adaptation for Semantic Segmentation of High-Resolution Aerial Images</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, F. Pro, L. Maiano, I. Amerini, B. Le Saux · IGARSS 2024</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2023</div>
+      <div>
+        <div class="pub-t"><a href="https://doi.org/10.1109/IJCNN54540.2023.10190997" target="_blank" rel="noopener">SLX: Similarity Learning for X-Ray Screening and Robust Automated Disassembled Object Detection</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, R. Jackson, S. Tsaftaris, M. Yaghoobi · IJCNN 2023</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2022</div>
+      <div>
+        <div class="pub-t"><a href="https://arxiv.org/abs/2111.15487" target="_blank" rel="noopener">FROB: Few-Shot ROBust Model for Joint Classification and Out-of-Distribution Detection</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, S. Tsaftaris, M. Yaghoobi · ECML PKDD 2022</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2020</div>
+      <div>
+        <div class="pub-t"><a href="https://doi.org/10.1109/ICIP40778.2020.9191341" target="_blank" rel="noopener">Boundary of Distribution Support Generator (BDSG): Sample Generation on the Boundary</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, M. Yaghoobi, S. Tsaftaris · ICIP 2020 · 17 citations</div>
+      </div>
+    </div>
+    <div class="pub reveal">
+      <div class="pub-yr">2018–19</div>
+      <div>
+        <div class="pub-t"><a href="https://doi.org/10.1109/TASLP.2018.2800525" target="_blank" rel="noopener">Phase-Aware Single-Channel Speech Enhancement With Modulation-Domain Kalman Filtering</a> · <a href="https://doi.org/10.1109/TASLP.2019.2894909" target="_blank" rel="noopener">Modulation-Domain Kalman Filtering for Monaural Blind Speech Denoising and Dereverberation</a></div>
+        <div class="pub-v"><b>N. Dionelis</b>, M. Brookes · IEEE/ACM Trans. Audio, Speech, and Language Processing (two journal papers)</div>
+      </div>
+    </div>
+
+    <p class="pub-more reveal">Full record: <a href="https://scholar.google.com/citations?hl=en&amp;user=2UweGHoAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener">Google Scholar</a> · <a href="https://dblp.org/pid/191/1019.html" target="_blank" rel="noopener">dblp</a> · <a href="https://orcid.org/0000-0001-9662-8537" target="_blank" rel="noopener">ORCID</a> · <a href="https://ieeexplore.ieee.org/author/37086129909" target="_blank" rel="noopener">IEEE Xplore</a> · <a href="https://arxiv.org/search/cs?searchtype=author&amp;query=Dionelis,+N" target="_blank" rel="noopener">arXiv</a> · <a href="https://spiral.imperial.ac.uk/search?spc.page=1&amp;query=dionelis&amp;configuration=site" target="_blank" rel="noopener">Imperial Spiral</a></p>
+  </div>
+</section>
+
+<section id="recognition">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">06</span><h2>Recognition</h2></div>
+    <div class="rec-grid">
+      <div class="rec reveal">
+        <div class="yr">Jul 2026</div>
+        <h3>Principal Research Scientist III</h3>
+        <p>Promoted at UAH / NASA MSFC within ten months of appointment — from Research Scientist VI.</p>
+      </div>
+      <div class="rec reveal">
+        <div class="yr">2026</div>
+        <h3>NSF NAIRR compute award</h3>
+        <p>650,000 supercomputing hours (~$5M) awarded to the UAH heliophysics foundation-model effort I contribute to.</p>
+      </div>
+      <div class="rec reveal">
+        <div class="yr">2023 – 2025</div>
+        <h3>ESA Internal Research Fellowship</h3>
+        <p>Competitive research fellowship at the European Space Agency’s Φ-lab, ESRIN, Italy.</p>
+      </div>
+      <div class="rec reveal">
+        <div class="yr">2015 – 2019</div>
+        <h3>EPSRC Doctoral Training Award</h3>
+        <p>Full PhD scholarship (tuition and stipend), Imperial College London; MIT–Imperial Global Fellows Programme.</p>
+      </div>
+      <div class="rec reveal">
+        <div class="yr">2015</div>
+        <h3>First Class Honours, Imperial College London</h3>
+        <p>MEng Electrical &amp; Electronic Engineering, 1st (72.8%) — Machine Learning for Computer Vision 84%, DSP 85%.</p>
+      </div>
+      <div class="rec reveal">
+        <div class="yr">Ongoing</div>
+        <h3>Peer review &amp; committees</h3>
+        <p>IEEE/ACM TASLP (15+ reviews), ICLR, ICPR, SSPD, IGARSS, EGU; best-paper committees at EarthVision 2024, HADR 2023, CCAI 2023, MACLEAN 2023; UKRI and ESA proposal evaluation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="border-bottom:none">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">07</span><h2>Get in touch</h2></div>
+    <p class="reveal">If your interests touch foundation models for science, spectral and wavelet methods, heliophysics, lunar exploration, or Earth observation — I would love to hear from you.</p>
+    <div class="reveal">
+      <a class="contact-mail" href="mailto:nikolaos.dionelis@uah.edu">nikolaos.dionelis@uah.edu</a>
+    </div>
+    <div class="contact-links reveal">
+      <a class="btn" href="mailto:nik.dionelis.2023@gmail.com">Personal email</a>
+      <a class="btn" href="https://scholar.google.com/citations?hl=en&amp;user=2UweGHoAAAAJ&amp;view_op=list_works&amp;sortby=pubdate" target="_blank" rel="noopener">Google Scholar</a>
+      <a class="btn" href="https://www.linkedin.com/in/nikolaos-dionelis-60688279" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://orcid.org/0000-0001-9662-8537" target="_blank" rel="noopener">ORCID</a>
+      <a class="btn" href="https://dblp.org/pid/191/1019.html" target="_blank" rel="noopener">dblp</a>
+      <a class="btn" href="https://sites.google.com/view/ndionelis" target="_blank" rel="noopener">Personal website</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 NIKOLAOS DIONELIS · HUNTSVILLE, AL</span>
+    <span>SIGNAL PROCESSING × GENERATIVE AI · ☉ ☾ ⊕</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Reveal on scroll ---------- */
+  var reveals = document.querySelectorAll(".reveal");
+  if (!reduce && "IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, {threshold: 0.12});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* ---------- Live Haar DWT hero ---------- */
+  var canvas = document.getElementById("dwt");
+  if (!canvas) return;
+  var ctx = canvas.getContext("2d");
+  var W = 0, H = 0;
+
+  function resize(){
+    var dpr = window.devicePixelRatio || 1;
+    var r = canvas.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = Math.max(1, Math.round(W * dpr));
+    canvas.height = Math.max(1, Math.round(H * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", function(){ resize(); if (reduce) draw(); });
+
+  var N = 512;
+  var buf = new Float32Array(N);
+  var t = 0, burstT = -1e9;
+
+  function nextSample(){
+    t += 1;
+    if (Math.random() < 0.0045) burstT = t;
+    var dt = t - burstT;
+    var b = (dt >= 0 && dt < 90) ? Math.exp(-(dt*dt)/70) * Math.sin(0.85*dt) : 0;
+    return 0.55*Math.sin(t*0.021)
+         + 0.28*Math.sin(t*0.076 + 1.3)
+         + 0.15*Math.sin(t*0.21 + 0.4)
+         + 0.05*(Math.random()*2 - 1)
+         + 0.95*b;
+  }
+  for (var i = 0; i < N; i++) buf[i] = nextSample();
+
+  function haar3(input){
+    var a = input, D = [];
+    for (var l = 0; l < 3; l++){
+      var half = a.length >> 1;
+      var na = new Float32Array(half), nd = new Float32Array(half);
+      for (var j = 0; j < half; j++){
+        na[j] = (a[2*j] + a[2*j+1]) / Math.SQRT2;
+        nd[j] = (a[2*j] - a[2*j+1]) / Math.SQRT2;
+      }
+      D.push(nd); a = na;
+    }
+    return { A: a, D: D };
+  }
+
+  function drawRow(data, y0, rh, color, label, gain){
+    var pad = 6, len = data.length;
+    ctx.strokeStyle = "rgba(160,175,220,0.10)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, y0 + rh); ctx.lineTo(W, y0 + rh);
+    ctx.stroke();
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    var mid = y0 + rh/2, amp = (rh/2 - pad) * gain;
+    for (var k = 0; k < len; k++){
+      var x = (k/(len-1)) * W;
+      var v = Math.max(-1.15, Math.min(1.15, data[k]));
+      var y = mid - v * amp;
+      if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(152,161,188,0.9)";
+    ctx.font = "10px 'IBM Plex Mono', monospace";
+    ctx.fillText(label, 8, y0 + 13);
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    var res = haar3(buf);
+    var rows = [
+      { d: buf,      c: "#EAECF5", l: "x[n]  input",         g: 0.62 },
+      { d: res.D[0], c: "#F2A93B", l: "d\u2081  fine detail", g: 0.55 },
+      { d: res.D[1], c: "#3FB7C6", l: "d\u2082",              g: 0.55 },
+      { d: res.D[2], c: "#C7CEDF", l: "d\u2083",              g: 0.55 },
+      { d: res.A,    c: "#8A7FD6", l: "a\u2083  approximation", g: 0.34 }
+    ];
+    var rh = H / rows.length;
+    for (var r = 0; r < rows.length; r++){
+      drawRow(rows[r].d, r*rh, rh, rows[r].c, rows[r].l, rows[r].g);
+    }
+  }
+
+  if (reduce){
+    draw();
+  } else {
+    (function loop(){
+      for (var s = 0; s < 2; s++){
+        buf.copyWithin(0, 1);
+        buf[N-1] = nextSample();
+      }
+      draw();
+      requestAnimationFrame(loop);
+    })();
+  }
+})();
+</script>
+</body>
+</html>
